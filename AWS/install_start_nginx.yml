@@ -1,0 +1,19 @@
+---
+- name: Install and Configure Nginx
+  hosts: webservers:dbservers
+  become: yes
+  tasks:
+    - name: Update APT package manager cache
+      apt:
+        update_cache: yes
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Start and enable Nginx service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
