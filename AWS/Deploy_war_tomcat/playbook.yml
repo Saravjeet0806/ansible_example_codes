@@ -1,0 +1,24 @@
+---
+- name: Deploy WAR file to Tomcat
+  hosts: webserver
+  become: yes
+  tasks:
+    - name: Copy the WAR file to the Tomcat webapps directory
+      copy:
+        src: /path/to/your_app.war
+        dest: /opt/tomcat/webapps/your_app.war #your app
+        owner: tomcat
+        group: tomcat
+        mode: '0644'
+
+    - name: Ensure Tomcat is running
+      systemd:
+        name: tomcat
+        state: started
+        enabled: true
+
+    - name: Wait for Tomcat to deploy the WAR file
+      wait_for:
+        path: /opt/tomcat/webapps/your_app
+        timeout: 120
+        state: directory
